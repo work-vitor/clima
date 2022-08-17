@@ -8,7 +8,7 @@ document.querySelector(".busca").addEventListener("submit", async (event) => {
     showWarning("Carregando...");
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(
       input
-    )}&appid=550905a2e0689fadc5bec0cd4f9cae4c&units=metric&lang=pt_br`;
+    )}&appid=cd6a5662874db7bdd79d8f3ba6940504&units=metric&lang=pt_br`;
     let results = await fetch(url);
     let json = await results.json();
 
@@ -21,6 +21,7 @@ document.querySelector(".busca").addEventListener("submit", async (event) => {
         climaTexto: json.weather[0].description,
         windSpeed: json.wind.speed,
         windAngle: json.wind.deg,
+        temp: json.main.temp
       });
     } else {
       showWarning("Não encontramos esta localização");
@@ -29,20 +30,27 @@ document.querySelector(".busca").addEventListener("submit", async (event) => {
 });
 
 function showWarning(msg) {
-  document.querySelector(".aviso").innerHTML = msg;
+  document.querySelector('.aviso').innerHTML = msg;
 }
 
 function clearInfo() {
-  showWarning("");
-  document.querySelector(".resultado").style.display = "none";
+
+  showWarning('');
+
+  document.querySelector('.resultado').style.display = 'none';
 }
 
 function showInfo(dados) {
-  showWarning("");
+  showWarning('');
   document.querySelector(
     ".titulo"
   ).innerHTML = `${dados.name}, ${dados.country}`;
   document.querySelector(".tempInfo").innerHTML = `${dados.temp} °C`;
-  document.querySelector(".ventoInfo").innerHTML = `$(dados)`;
+  document.querySelector(".ventoInfo").innerHTML = `${dados.windSpeed}<span>Km</h></span>`;
+  document.querySelector('.temp img').setAttribute('src', `http://openweathermap.org/img/wn/${dados.climaIcon}@2x.png`);
+  document.querySelector('.climaTitulo').innerHTML = `${dados.climaTexto}`;
+  document.querySelector('.ventoPonto').style.transform = `rotate(${dados.windAngle-90}deg)`;
+
+  document.querySelector('.resultado').style.display = 'block';
 
 }
